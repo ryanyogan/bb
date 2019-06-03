@@ -1,6 +1,36 @@
 import Document, { Head, Main, NextScript } from 'next/document';
+import React from 'react';
+import { JssProvider } from 'react-jss';
+import getContext from '../lib/context';
 
 class MyDocument extends Document {
+  static getInitialProps = ({ renderPage }) => {
+    const pageContext = getContext();
+
+    const page = renderPage((Component) => (props) => (
+      <JssProvider
+        registry={pageContext.sheetsRegistry}
+        generateClassName={pageContext.generateClassName}
+      >
+        <Component pageContext={pageContext} {...props} />
+      </JssProvider>
+    ));
+
+    return {
+      ...page,
+      pageContext,
+      styles: (
+        <style
+          id="jss-server-side"
+          // eslint-disable-next-line
+          dangerouslySetInnerHTML={{
+            __html: pageContext.sheetsRegistry.toString(),
+          }}
+        />
+      ),
+    };
+  };
+
   render() {
     return (
       <html lang="en">
