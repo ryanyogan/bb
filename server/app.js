@@ -7,6 +7,7 @@ const session = require('express-session');
 const mongoSessionStore = require('connect-mongo');
 
 const auth = require('./google');
+const logger = require('./logs');
 
 const dev = process.env.NODE_ENV !== 'production';
 const MONGO_URL = process.env.MONGO_URL_TEST;
@@ -53,7 +54,7 @@ app
 
     server.listen(port, (err) => {
       if (err) throw err;
-      console.log(`> Ready on ${ROOT_URL}`); // eslint-disable-line
+      logger.info(`> Ready on ${ROOT_URL}`);
     });
   })
   .catch((err) => console.log(err)); // eslint-disable-line

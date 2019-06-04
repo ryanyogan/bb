@@ -6,10 +6,15 @@
   "scripts": {
     "build": "next build",
     "start": "next start",
-    "dev": "nodemon server/app.js --watch server"
+    "dev": "nodemon server/app.js --watch server",
+    "test": "jest --coverage"
+  },
+  "jest": {
+    "coverageDirectory": "./.coverage"
   },
   "dependencies": {
     "@material-ui/core": "^3.9.3",
+    "aws-sdk": "^2.467.0",
     "connect-mongo": "^2.0.3",
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
@@ -24,10 +29,12 @@
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-jss": "^8.6.1"
+    "react-jss": "^8.6.1",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
+    "email-addresses": "^3.0.3",
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-prettier": "^4.3.0",
@@ -35,6 +42,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "^7.13.0",
+    "jest": "^24.8.0",
     "nodemon": "^1.19.1",
     "prettier": "^1.17.1"
   }
