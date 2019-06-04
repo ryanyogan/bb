@@ -9,6 +9,8 @@ const mongoSessionStore = require('connect-mongo');
 const auth = require('./google');
 const logger = require('./logs');
 
+const { insertTemplates } = require('./models/EmailTemplate');
+
 const dev = process.env.NODE_ENV !== 'production';
 const MONGO_URL = process.env.MONGO_URL_TEST;
 
@@ -27,7 +29,7 @@ const handle = app.getRequestHandler();
 
 app
   .prepare()
-  .then(() => {
+  .then(async () => {
     const server = express();
     const MongoStore = mongoSessionStore(session);
 
@@ -47,6 +49,8 @@ app
     };
 
     server.use(session(sessionConfig));
+
+    await insertTemplates();
 
     auth({ server, ROOT_URL });
 

@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const _ = require('lodash');
+
+const { getEmailTemplate } = require('./EmailTemplate');
+const sendEmail = require('../aws');
 const generateSlug = require('../utils/slugify');
+const logger = require('../logs');
 
 const { Schema } = mongoose;
 
@@ -86,6 +90,21 @@ class UserClass {
       slug,
       isAdmin: userCount === 0,
     });
+
+    const template = await getEmailTemplate('welcome', {
+      userName: displayName,
+    });
+
+    try {
+      await sendEmail({
+        from: `Ryan Yogan <${process.env.EMAIL_SUPPORT_FROM_ADDRESS}>`,
+        to: [email],
+        subject: template.subject,
+        body: template.message,
+      });
+    } catch (error) {
+      logger.error('Email sending error: ', error);
+    }
 
     return _.pick(newUser, UserClass.publicFields());
   }
