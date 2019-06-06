@@ -23,6 +23,7 @@ const auth = ({ ROOT_URL, server }) => {
         displayName: profile.displayName,
         avatarUrl,
       });
+
       verified(null, user);
     } catch (error) {
       verified(error);
@@ -68,7 +69,7 @@ const auth = ({ ROOT_URL, server }) => {
       failureRedirect: '/login',
     }),
     (_, res) => {
-      res.redirect('/');
+      res.redirect('/admin');
     },
   );
 

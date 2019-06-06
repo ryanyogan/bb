@@ -1,9 +1,10 @@
+/* eslint-disable no-use-before-define */
+
 const mongoose = require('mongoose');
-const Book = require('./Book');
 
 const { Schema } = mongoose;
 
-const mongoSchema = new Schema({
+const chapterSchema = new Schema({
   bookId: {
     type: Schema.Types.ObjectId,
     required: true,
@@ -64,30 +65,36 @@ const mongoSchema = new Schema({
 
 class ChapterClass {
   static async getBySlug({ bookSlug, chapterSlug }) {
-    const book = await Book.getBySlug({ slug: bookSlug });
+    try {
+      const book = await Book.getBySlug({ slug: bookSlug });
 
-    if (!book) {
-      throw new Error('Not Found');
+      if (!book) {
+        throw new Error('Book Not Found');
+      }
+
+      const chapter = await this.findOne({ bookId: book._id, slug: chapterSlug });
+
+      if (!chapter) {
+        throw new Error('Chapter Not Found');
+      }
+
+      const chapterObj = chapter.toObject();
+      chapterObj.book = book;
+
+      return chapterObj;
+    } catch (error) {
+      throw new Error(error);
     }
-
-    const chapter = await this.findOne({ bookId: book._id, slug: chapterSlug });
-
-    if (!chapter) {
-      throw new Error('Not Found');
-    }
-
-    const chapterObj = chapter.toObject();
-    chapterObj.book = book;
-
-    return chapterObj;
   }
 }
 
-mongoSchema.index({ bookId: 1, slug: 1 }, { unique: true });
-mongoSchema.index({ bookId: 1, githubFilePath: 1 }, { unique: true });
+chapterSchema.index({ bookId: 1, slug: 1 }, { unique: true });
+chapterSchema.index({ bookId: 1, githubFilePath: 1 }, { unique: true });
 
-mongoSchema.loadClass(ChapterClass);
+chapterSchema.loadClass(ChapterClass);
 
-const Chapter = mongoose.model('Chapter', mongoSchema);
+const Chapter = mongoose.model('Chapter', chapterSchema);
 
 module.exports = Chapter;
+
+const Book = require('./Book');

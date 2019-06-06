@@ -9,7 +9,8 @@ class Notifier extends React.Component {
     message: '',
   };
 
-  componentDidMount() {
+  constructor(props) {
+    super(props);
     openSnackbarFn = this.openSnackbar;
   }
 

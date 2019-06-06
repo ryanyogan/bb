@@ -1,8 +1,8 @@
 import { Button } from '@material-ui/core';
 import Head from 'next/head';
-import { styleLoginButton } from '../components/SharedStyles';
-import withAuth from '../lib/withAuth';
-import withLayout from '../lib/withLayout';
+import { styleLoginButton } from '../../components/SharedStyles';
+import withAuth from '../../lib/withAuth';
+import withLayout from '../../lib/withLayout';
 
 const Login = () => (
   <div style={{ textAlign: 'center', margin: '0 20px' }}>
