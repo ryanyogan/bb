@@ -54,6 +54,7 @@ app
       },
     };
 
+    server.use(express.json());
     server.use(session(sessionConfig));
 
     await insertTemplates();
