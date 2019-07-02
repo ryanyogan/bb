@@ -7,6 +7,7 @@ const session = require('express-session');
 const mongoSessionStore = require('connect-mongo');
 
 const api = require('./api');
+const routesWithSlug = require('./routesWithSlug');
 
 const auth = require('./google');
 const logger = require('./logs');
@@ -61,11 +62,7 @@ app
 
     auth({ server, ROOT_URL });
     api(server);
-
-    server.get('/books/:bookSlug/:chapterSlug', (req, res) => {
-      const { bookSlug, chapterSlug } = req.params;
-      app.render(req, res, '/public/read-chapter', { bookSlug, chapterSlug });
-    });
+    routesWithSlug({ server, app });
 
     server.get('*', (req, res) => {
       const url = URL_MAP[req.path];
