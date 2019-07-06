@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import Router from 'next/router';
 import NProgress from 'nprogress';
 import React from 'react';
@@ -7,33 +8,40 @@ import notify from '../../lib/notifier';
 import withAuth from '../../lib/withAuth';
 import withLayout from '../../lib/withLayout';
 
-const addBookOnSave = async (data) => {
-  NProgress.start();
-
-  try {
-    const book = await addBook(data);
-    notify('Saved Book');
+class AddBook extends React.Component {
+  addBookOnSave = async (data) => {
+    NProgress.start();
 
     try {
-      const bookId = book._id;
-      await syncBookContent({ bookId });
-      notify('Book Synced');
-      NProgress.done();
-      Router.push(`/admin/book-detaul?slug=${book.slug}`, `/admin/book-detail/${book.slug}`);
+      const book = await addBook(data);
+      notify('Saved');
+      try {
+        const bookId = book._id;
+        await syncBookContent({ bookId });
+        notify('Synced');
+        NProgress.done();
+        Router.push(`/admin/book-detail?slug=${book.slug}`, `/admin/book-detail/${book.slug}`);
+      } catch (err) {
+        notify(err);
+        NProgress.done();
+      }
     } catch (err) {
       notify(err);
       NProgress.done();
     }
-  } catch (error) {
-    notify(error);
-    NProgress.done();
-  }
-};
+  };
 
-const AddBook = () => (
-  <div style={{ padding: '10px 45px' }}>
-    <EditBook onSave={addBookOnSave} />
-  </div>
-);
+  render() {
+    return (
+      <div style={{ padding: '10px 45px' }}>
+        <Head>
+          <title>Add Book</title>
+          <meta name="description" content="Add new book" />
+        </Head>
+        <EditBook onSave={this.addBookOnSave} />
+      </div>
+    );
+  }
+}
 
 export default withAuth(withLayout(AddBook));

@@ -1,17 +1,20 @@
-import { Button, Input, MenuItem, Select, TextField } from '@material-ui/core';
-import { func, shape, string } from 'prop-types';
+import Button from '@material-ui/core/Button';
+import Input from '@material-ui/core/Input';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { getGithubRepos } from '../../lib/api/admin';
 import notify from '../../lib/notifier';
-import logger from '../../server/logs';
 import { styleTextField } from '../SharedStyles';
 
 class EditBook extends React.Component {
   static propTypes = {
-    book: shape({
-      _id: string.isRequired,
+    book: PropTypes.shape({
+      _id: PropTypes.string.isRequired,
     }),
-    onSave: func.isRequired,
+    onSave: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -30,19 +33,17 @@ class EditBook extends React.Component {
   async componentDidMount() {
     try {
       const { repos } = await getGithubRepos();
-      this.setState({ repos });
-    } catch (error) {
-      logger.error(error);
+      this.setState({ repos }); // eslint-disable-line
+    } catch (err) {
+      console.log(err); // eslint-disable-line
     }
   }
 
   onSubmit = (event) => {
     event.preventDefault();
-    const {
-      book: { name, price, githubRepo },
-      ...book
-    } = this.state;
     const { onSave } = this.props;
+    const { book } = this.state;
+    const { name, price, githubRepo } = book;
 
     if (!name) {
       notify('Name is required');
@@ -62,38 +63,19 @@ class EditBook extends React.Component {
     onSave(book);
   };
 
-  onChange = (event) => {
-    this.setState((state) => ({
-      book: Object.assign({}, state.book, { name: event.target.value }),
-    }));
-  };
-
   render() {
     const { book, repos } = this.state;
     return (
       <div style={{ padding: '10px 45px' }}>
+        <br />
         <form onSubmit={this.onSubmit}>
-          <br />
-          <div>
-            <TextField
-              onChange={this.onChange}
-              value={book.name}
-              type="text"
-              label="Book's title"
-              labelClassName="textFieldLabel"
-              style={styleTextField}
-              required
-            />
-          </div>
-          <br />
-          <br />
           <TextField
             onChange={(event) => {
-              this.setState((state) => ({
-                book: Object.assign({}, state.book, { price: Number(event.target.value) }),
-              }));
+              this.setState({
+                book: Object.assign({}, book, { price: Number(event.target.value) }),
+              });
             }}
-            value={book.price}
+            value={book.price || ''}
             type="number"
             label="Book's price"
             className="textFieldInput"
@@ -104,14 +86,29 @@ class EditBook extends React.Component {
           <br />
           <br />
           <div>
+            <TextField
+              onChange={(event) => {
+                this.setState({
+                  book: Object.assign({}, book, { name: event.target.value }),
+                });
+              }}
+              value={book.name || ''}
+              type="text"
+              label="Book's title"
+              style={styleTextField}
+              required
+            />
+          </div>
+          <br />
+          <div>
             <span>Github repo: </span>
             <Select
               value={book.githubRepo || ''}
               input={<Input />}
               onChange={(event) => {
-                this.setState((state) => ({
-                  book: Object.assign({}, state.book, { githubRepo: event.target.value }),
-                }));
+                this.setState({
+                  book: Object.assign({}, book, { githubRepo: event.target.value }),
+                });
               }}
             >
               <MenuItem value="">
@@ -125,8 +122,39 @@ class EditBook extends React.Component {
             </Select>
           </div>
           <br />
+
+          <TextField
+            onChange={(event) => {
+              this.setState({
+                book: Object.assign({}, book, {
+                  supportURL: event.target.value,
+                }),
+              });
+            }}
+            value={book.supportURL || ''}
+            label="Support URL"
+            className="textFieldInput"
+            style={styleTextField}
+          />
           <br />
-          <Button raised type="submit">
+          <br />
+
+          <TextField
+            onChange={(event) => {
+              this.setState({
+                book: Object.assign({}, book, {
+                  textNearButton: event.target.value,
+                }),
+              });
+            }}
+            value={book.textNearButton || ''}
+            label="Text next to Buy Button"
+            className="textFieldInput"
+            style={styleTextField}
+          />
+          <br />
+          <br />
+          <Button variant="contained" type="submit">
             Save
           </Button>
         </form>

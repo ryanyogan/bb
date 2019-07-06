@@ -11,6 +11,7 @@ const routesWithSlug = require('./routesWithSlug');
 
 const auth = require('./google');
 const logger = require('./logs');
+const { setupGithub } = require('./github');
 
 const { insertTemplates } = require('./models/EmailTemplate');
 
@@ -32,6 +33,7 @@ const handle = app.getRequestHandler();
 
 const URL_MAP = {
   '/login': '/public/login',
+  '/my-books': '/customer/my-books',
 };
 
 app
@@ -61,6 +63,7 @@ app
     await insertTemplates();
 
     auth({ server, ROOT_URL });
+    setupGithub({ server });
     api(server);
     routesWithSlug({ server, app });
 

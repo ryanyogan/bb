@@ -1,3 +1,4 @@
+import { Button } from '@material-ui/core';
 import Link from 'next/link';
 import { arrayOf, shape, string } from 'prop-types';
 import React from 'react';
@@ -10,6 +11,9 @@ const Index = ({ books }) => (
   <div style={{ padding: '10px 45px' }}>
     <div>
       <h2>Books</h2>
+      <Link href="/admin/add-book">
+        <Button variant="contained">Add book</Button>
+      </Link>
       <ul>
         {books &&
           books.map((book) => (
