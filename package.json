@@ -10,7 +10,10 @@
     "dev": "nodemon server/app.js --watch server",
     "next": "next",
     "lint": "eslint pages",
-    "test": "jest"
+    "test": "jest --coverage"
+  },
+  "jest": {
+    "coverageDirectory": "./.coverage"
   },
   "dependencies": {
     "@material-ui/core": "^4.2.0",
