@@ -26,7 +26,7 @@ const ROOT_URL = `http://localhost:${PORT}`;
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
-app.prepare().then(() => {
+app.prepare().then(async () => {
   const server = express();
 
   const MongoStore = mongoSessionStore(session);
