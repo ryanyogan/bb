@@ -8,6 +8,7 @@ const mongoSessionStore = require('connect-mongo');
 
 const auth = require('./google');
 const logger = require('./logs');
+const api = require('./api');
 
 const dev = process.env.NODE_ENV !== 'production';
 const MONGO_URL = process.env.MONGO_URL_TEST;
@@ -52,6 +53,12 @@ app.prepare().then(async () => {
 
   server.use(session(sess));
   auth({ server, ROOT_URL });
+  api({ server });
+
+  server.get('/books/:bookSlug/:chapterSlug', (req, res) => {
+    const { bookSlug, chapterSlug } = req.params;
+    app.render(req, res, '/public/read-chapter', { bookSlug, chapterSlug });
+  });
 
   server.get('*', (req, res) => {
     const url = URL_MAP[req.path];
