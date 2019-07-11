@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const mongoSessionStore = require('connect-mongo');
 
-const User = require('./models/User');
+const auth = require('./google');
 
 const dev = process.env.NODE_ENV !== 'production';
 const MONGO_URL = process.env.MONGO_URL_TEST;
@@ -46,11 +46,7 @@ app.prepare().then(() => {
   };
 
   server.use(session(sess));
-
-  server.get('/', async (req, res) => {
-    const user = await User.findOne({ slug: 'ryan-yogan' });
-    app.render(req, res, '/', { user });
-  });
+  auth({ server, ROOT_URL });
 
   server.get('*', (req, res) => handle(req, res));
 

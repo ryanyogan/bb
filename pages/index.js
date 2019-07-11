@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { shape, string } from 'prop-types';
 import React from 'react';
+import withAuth from '../lib/withAuth';
 
 class Index extends React.Component {
   state = {};
@@ -8,6 +9,7 @@ class Index extends React.Component {
   static propTypes = {
     user: shape({
       email: string.isRequired,
+      displayName: string,
     }),
   };
 
@@ -15,25 +17,15 @@ class Index extends React.Component {
     user: null,
   };
 
-  static async getInitialProps(ctx) {
-    return {
-      user: ctx.query.user,
-    };
-  }
-
-  static getInitialProps = async (ctx) => ({
-    user: ctx.query.user,
-  });
-
   render() {
     const { user } = this.props;
     return (
       <div style={{ padding: '10px 45px' }}>
         <Head>
-          <title>Index Page</title>
-          <meta name="description" content="This is a description" />
+          <title>Dashboard</title>
+          <meta name="description" content="List of purchased books." />
         </Head>
-        <p>Content</p>
+        <p> Dashboard </p>
         <p>
           Email:
           {` ${user.email}`}
@@ -43,4 +35,4 @@ class Index extends React.Component {
   }
 }
 
-export default Index;
+export default withAuth(Index);
