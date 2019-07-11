@@ -5,6 +5,7 @@ import Router from 'next/router';
 import NProgress from 'nprogress';
 import React from 'react';
 import Header from '../components/Header';
+import Notifier from '../components/Notifier';
 import { theme } from '../lib/theme';
 
 Router.onRouteChangeStart = () => NProgress.start();
@@ -38,6 +39,7 @@ class MyApp extends App {
           <CssBaseline />
           <Header {...pageProps} />
           <Component {...pageProps} />
+          <Notifier />
         </ThemeProvider>
       </Container>
     );
