@@ -9,13 +9,16 @@
     "start": "node server/app.js",
     "dev": "nodemon server/app.js --watch server",
     "next": "next",
-    "lint": "eslint pages"
+    "lint": "eslint pages",
+    "test": "jest"
   },
   "dependencies": {
     "@material-ui/core": "^4.2.0",
     "@material-ui/styles": "^4.2.0",
+    "aws-sdk": "^2.492.0",
     "connect-mongo": "^3.0.0",
     "dotenv": "^8.0.0",
+    "email-addresses": "^3.0.3",
     "express": "^4.17.1",
     "express-session": "^1.16.2",
     "googleapis": "^40.0.1",
@@ -28,7 +31,8 @@
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-jss": "^8.6.1"
+    "react-jss": "^8.6.1",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.2",
@@ -39,6 +43,7 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react": "^7.14.2",
+    "jest": "^24.8.0",
     "nodemon": "^1.19.1",
     "prettier": "^1.18.2"
   }
