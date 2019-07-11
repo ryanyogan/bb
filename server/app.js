@@ -12,6 +12,10 @@ const logger = require('./logs');
 const dev = process.env.NODE_ENV !== 'production';
 const MONGO_URL = process.env.MONGO_URL_TEST;
 
+const URL_MAP = {
+  '/login': '/public/login',
+};
+
 const options = {
   useNewUrlParser: true,
   useCreateIndex: true,
@@ -49,7 +53,14 @@ app.prepare().then(async () => {
   server.use(session(sess));
   auth({ server, ROOT_URL });
 
-  server.get('*', (req, res) => handle(req, res));
+  server.get('*', (req, res) => {
+    const url = URL_MAP[req.path];
+    if (url) {
+      app.render(req, res, url);
+    } else {
+      handle(req, res);
+    }
+  });
 
   server.listen(PORT, (err) => {
     if (err) throw err;
