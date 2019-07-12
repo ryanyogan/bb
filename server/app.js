@@ -35,6 +35,7 @@ app.prepare().then(async () => {
   const server = express();
 
   const MongoStore = mongoSessionStore(session);
+  server.use(express.json());
 
   const sess = {
     name: 'builderbook.sid',
