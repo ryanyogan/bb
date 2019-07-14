@@ -26,6 +26,7 @@
     "express": "^4.17.1",
     "express-session": "^1.16.2",
     "front-matter": "^3.0.2",
+    "fs": "^0.0.1-security",
     "googleapis": "^40.0.1",
     "he": "^1.2.0",
     "highlight.js": "^9.15.8",
@@ -43,7 +44,7 @@
     "react-dom": "^16.8.6",
     "react-jss": "^8.6.1",
     "request": "^2.88.0",
-    "winston": "^3.2.1"
+    "winston": "3.2.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.2",

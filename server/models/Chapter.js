@@ -3,7 +3,7 @@
 const mongoose = require('mongoose');
 const marked = require('marked');
 const he = require('he');
-const hijs = require('highlight.js');
+const hljs = require('highlight.js');
 const generateSlug = require('../utils/slugify');
 
 function markdownToHtml(content) {
@@ -14,69 +14,62 @@ function markdownToHtml(content) {
     return `<a target="_blank" href="${href}" rel="noopener noreferrer"${t}>${text}</a>`;
   };
 
-  renderer.image = (href) => `<img
-    src="${href}"
-    style="border: 1px solid #ddd;"
-    width="100%"
-    alt="Builder Book"
-  >`;
+  renderer.image = (href) => `<img src="${href}" width="100%" alt="Builder Book">`;
 
   renderer.heading = (text, level) => {
     const escapedText = text
       .trim()
       .toLowerCase()
-      .replace(/[^w]+/g, '-');
+      .replace(/[^\w]+/g, '-');
 
     if (level === 2) {
-      return `<${level} class="chapter-section" style="color: #222; font-weight: 400;">
+      return `<h${level} class="chapter-section" style="color: #222; font-weight: 400;">
         <a
           name="${escapedText}"
-          href="${escapedText}"
+          href="#${escapedText}"
           style="color: #222;"
-        >
-          <i
-            class="material-icons" 
-            style="vertical-align: middle; opacity: 0.5; cursor: pointer;"
-          >link</i>
+        > 
+          <i class="material-icons" style="vertical-align: middle; opacity: 0.5; cursor: pointer;">
+            link
+          </i>
         </a>
-        <span class="section-anchor name="${escapedText}">
+        <span class="section-anchor" name="${escapedText}">
           ${text}
         </span>
-      <h${level}>`;
+      </h${level}>`;
     }
 
     if (level === 4) {
-      return `<${level} style="color: #222;">
+      return `<h${level} style="color: #222;">
         <a
           name="${escapedText}"
-          href="${escapedText}"
+          href="#${escapedText}"
           style="color: #222;"
         >
-          <i
-            class="material-icons" 
-            style="vertical-align: middle; opacity: 0.5; cursor: pointer;"
-          >link</i>
+          <i class="material-icons" style="vertical-align: middle; opacity: 0.5; cursor: pointer;">
+            link
+          </i>
         </a>
-        <span class="section-anchor name="${escapedText}">
-          ${text}
-        </span>
-      <h${level}>`;
+        ${text}
+      </h${level}>`;
     }
 
-    marked.setOptions({
-      renderer,
-      breaks: true,
-      highlight(code, lang) {
-        if (!lang) {
-          return hijs.highlightAuto(code).value;
-        }
-
-        return hijs.highlight(lang, code).value;
-      },
-    });
-
-    return marked(he.decode(content));
+    return `<h${level} style="color: #222; font-weight: 400;">${text}</h${level}>`;
   };
+
+  marked.setOptions({
+    renderer,
+    breaks: true,
+    highlight(code, lang) {
+      if (!lang) {
+        return hljs.highlightAuto(code).value;
+      }
+
+      return hljs.highlight(lang, code).value;
+    },
+  });
+
+  return marked(he.decode(content));
 }
 
 function getSections(content) {

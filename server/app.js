@@ -6,15 +6,18 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const mongoSessionStore = require('connect-mongo');
 
+const { setupGithub } = require('./github');
 const auth = require('./google');
 const logger = require('./logs');
 const api = require('./api');
+const routesWithSlug = require('./routesWithSlug');
 
 const dev = process.env.NODE_ENV !== 'production';
 const MONGO_URL = process.env.MONGO_URL_TEST;
 
 const URL_MAP = {
   '/login': '/public/login',
+  '/my-books': '/customer/my-books',
 };
 
 const options = {
@@ -54,12 +57,9 @@ app.prepare().then(async () => {
 
   server.use(session(sess));
   auth({ server, ROOT_URL });
+  setupGithub({ server });
   api({ server });
-
-  server.get('/books/:bookSlug/:chapterSlug', (req, res) => {
-    const { bookSlug, chapterSlug } = req.params;
-    app.render(req, res, '/public/read-chapter', { bookSlug, chapterSlug });
-  });
+  routesWithSlug({ server, app });
 
   server.get('*', (req, res) => {
     const url = URL_MAP[req.path];
